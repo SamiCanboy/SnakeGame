@@ -6,6 +6,7 @@ let playButton = document.createElement('button')
 let buttonDiv = document.createElement('div')
 let score
 let apple
+let move
 playButton.setAttribute('onclick','run()'
 
 )
@@ -46,6 +47,11 @@ document.body.appendChild(gameTable)
 document.body.appendChild(buttonDiv)
 function finish() {
     alert(`Score: ${(snake.length)-4}`)
+    clearInterval(move)
+    for (let f = 0; f < 226; f++) {
+        document.getElementById(f).style.backgroundColor = 'white'
+    }
+    alert(`Score: ${(snake.length)-4}`)
 }
 function createApple() {
     do {
@@ -58,7 +64,7 @@ function run() {
     snake = [112,111,110,109];
     
     createApple()
-    setInterval(function() {
+    move = setInterval(function() {
         moveSnake();
     }, 1000); // Yılanı her 400ms'de bir hareket ettir
     document.addEventListener('keydown', function(event) {
@@ -104,27 +110,28 @@ function moveSnake() {
         
     } else if (direction === 4) {
         if ((newHead - 1) % 15 ==0) {
-            newHead += 14
+            newHead = head + 14
         }
         else{
             newHead = head - 1; // Sol git
         }
-        
     }
     title.innerHTML = `Score: ${score}||${newHead}||${snake}`
 
     // Yılanın başını yeşile boyama
-    document.getElementById(newHead).style.backgroundColor = 'darkgreen';
-    
+    document.getElementById(newHead).style.backgroundColor = 'blue';
+    document.getElementById(snake[0]).style.backgroundColor = 'green';
+
     // Yılanın vücudunu beyaza döndürme (önceki pozisyon)
     document.getElementById(snake[snake.length - 1]).style.backgroundColor = 'white';
     
     // Yılanın başını ve vücudunu güncelleme
     snake.unshift(newHead);
-    if (snake.includes(newHead)) {
-        
-        finish()
-       
+    for (let f = 1; f < snake.length; f++) {
+        if (newHead == snake[f]) {
+            finish()
+            clearInterval(move)
+        }
     }
     if (newHead === apple) {
         score += 1;
