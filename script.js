@@ -22,7 +22,7 @@ for (let i = 0; i < 15; i++) {
         let cell = document.createElement('th')
         let cellid = (i*15+j).toString()
         cell.style.backgroundColor = 'white'
-        cell.innerText = cellid
+        
         cell.id = cellid
         cell.style.width = '30px'
         cell.style.height = '30px'
