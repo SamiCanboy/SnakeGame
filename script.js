@@ -22,12 +22,6 @@ let direction = 2;
 //            4 -- Left
 let snake;
 
-document.addEventListener('resize',function(){
-    let h = document.getElementById(0).style.height
-    let w = document.getElementById(0).style.width
-
-    console.log(h,w)
-})
 for (let i = 0; i < 15; i++) {
     let row = document.createElement('tr')
     for (let j = 1; j < 16; j++) {
@@ -39,29 +33,49 @@ for (let i = 0; i < 15; i++) {
         cell.style.width = '50px'
         cell.style.height = '50px'
         cell.style.borderRadius = '40%'
-        cell.style.border = '1px solid'
+        cell.style.border = '1px solid black'
         row.appendChild(cell);
     }
     gameTable.appendChild(row);
 }
-if (window.innerHeight < 950) {
-    for (let k = 1; k <= 225; k++) {
-        
-        
+function adjustCellHeights(newHeight) {
+    // gameTable içindeki tüm hücreleri seç
+    const cells = gameTable.getElementsByTagName('th');
+
+    // Her hücrenin yüksekliğini güncelle
+    for (let cell of cells) {
+        cell.style.height = `${newHeight}px`;
     }
 }
-    
-function checkDirection() {
-    if (touchendX < touchstartX) {
-    alert('swiped left!')}
-    else if (touchendX > touchstartX) {
-    alert('swiped right!')}
-    else if (touchendY < touchstartY){
-    alert('swiped down')}
-    else if (touchendY < touchstartY){
-    alert('swiped up')}
 
+// Örnek kullanım: tüm hücreleri 40px yap
+adjustCellHeights(40);
+if (window.innerWidth<800) {
+    adjustCellHeights(25);
 }
+
+function checkDirection() {
+    const deltaX = touchendX - touchstartX; // Yatay hareket farkı
+    const deltaY = touchendY - touchstartY; // Dikey hareket farkı
+
+    // Mutlak değer farklarını karşılaştır
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Yatay hareket
+        if (deltaX > 0 && lastdirection !== 4) {
+            direction = 2; // Sağ
+        } else if (deltaX < 0 && lastdirection !== 2) {
+            direction = 4; // Sol
+        }
+    } else {
+        // Dikey hareket
+        if (deltaY > 0 && lastdirection !== 1) {
+            direction = 3; // Aşağı
+        } else if (deltaY < 0 && lastdirection !== 3) {
+            direction = 1; // Yukarı
+        }
+    }
+}
+
 
 document.addEventListener('touchstart', e => {
   touchstartX = e.changedTouches[0].screenX
@@ -126,15 +140,6 @@ function run() {
         } else if (direction != 2 && lastdirection != 2 && event.key === 'a'||event.key === 'A'||event.key === 'ArrowLeft') {
             direction = 4; // Sol (4)
         }
-        // if (direction != 3 && (event.key === 'w' || event.key === 'W' || event.key === 'ArrowUp')) {
-        //     direction = 1; // Yukarı
-        // } else if (direction != 4 && event.key === 'd'||event.key === 'S'||event.key === 'ArrowRight') {
-        //     direction = 2; // Sağ (2)
-        // } else if (direction != 1 && event.key === 's'||event.key === 'S'||event.key === 'ArrowDown') {
-        //     direction = 3; // Aşağı (3)
-        // } else if (direction != 2 && event.key === 'a'||event.key === 'A'||event.key === 'ArrowLeft') {
-        //     direction = 4; // Sol (4)
-        // }
     });
 }
 function moveSnake() {
