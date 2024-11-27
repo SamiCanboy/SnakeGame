@@ -34,7 +34,6 @@ for (let i = 0; i < 15; i++) {
         cell.style.width = '50px'
         cell.style.height = '50px'
         cell.style.borderRadius = '40%'
-        cell.style.border = '1px solid black'
         row.appendChild(cell);
     }
     gameTable.appendChild(row);
