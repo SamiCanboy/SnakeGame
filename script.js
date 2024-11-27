@@ -1,4 +1,5 @@
 document.body.style.backgroundColor = 'black'
+
 let headerDiv = document.createElement('div')
 let title = document.createElement('h1')
 let gameTable = document.createElement('table')
@@ -26,15 +27,32 @@ for (let i = 0; i < 15; i++) {
         cell.style.backgroundColor = 'white'
         
         cell.id = cellid
-        cell.style.width = '30px'
-        cell.style.height = '30px'
+        cell.style.width = '50px'
+        cell.style.height = '50px'
         cell.style.borderRadius = '40%'
         cell.style.border = '1px solid'
         row.appendChild(cell);
     }
     gameTable.appendChild(row);
 }
+let touchstartX = 0
+let touchendX = 0
+    
+function checkDirection() {
+  if (touchendX < touchstartX) {
+    alert('swiped left!')}
+  if (touchendX > touchstartX) {
+    alert('swiped right!')}
+}
 
+document.addEventListener('touchstart', e => {
+  touchstartX = e.changedTouches[0].screenX
+})
+
+document.addEventListener('touchend', e => {
+  touchendX = e.changedTouches[0].screenX
+  checkDirection()
+})
 gameTable.style.border = '3px red solid'
 gameTable.style.marginLeft = 'auto'
 gameTable.style.marginRight = 'auto'
@@ -170,10 +188,12 @@ function moveSnake() {
     
     // Yılanın başını ve vücudunu güncelleme
     snake.unshift(newHead);
-    for (let f = 1; f < snake.length; f++) {
+    for (let f = 0; f < snake.length; f++) {
         if (newHead == snake[f]) {
             finish()
+            document.getElementById(newHead).innerHTML = ''
             clearInterval(move)
+            return
         
         }
     }
