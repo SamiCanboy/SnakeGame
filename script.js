@@ -1,24 +1,33 @@
 document.body.style.backgroundColor = 'black'
-
+document.body.style.overflow = 'hidden'
 let headerDiv = document.createElement('div')
 let title = document.createElement('h1')
 let gameTable = document.createElement('table')
-let playButton = document.createElement('button')
-let buttonDiv = document.createElement('div')
 let score
 let apple
 let move
 let appleCell
 let lastdirection
 let rotation;
+let touchstartX = 0
+let touchendX = 0
+let touchstartY = 0
+let touchendY = 0
 
-playButton.setAttribute('onclick','run(), playButton.style.visibility = `hidden`')
+
 let direction = 2;
 // direction: 1 -- Up,
 //            2 -- Right
 //            3 -- Down
 //            4 -- Left
 let snake;
+
+document.addEventListener('resize',function(){
+    let h = document.getElementById(0).style.height
+    let w = document.getElementById(0).style.width
+
+    console.log(h,w)
+})
 for (let i = 0; i < 15; i++) {
     let row = document.createElement('tr')
     for (let j = 1; j < 16; j++) {
@@ -35,24 +44,37 @@ for (let i = 0; i < 15; i++) {
     }
     gameTable.appendChild(row);
 }
-let touchstartX = 0
-let touchendX = 0
+if (window.innerHeight < 950) {
+    for (let k = 1; k <= 225; k++) {
+        
+        
+    }
+}
     
 function checkDirection() {
-  if (touchendX < touchstartX) {
+    if (touchendX < touchstartX) {
     alert('swiped left!')}
-  if (touchendX > touchstartX) {
+    else if (touchendX > touchstartX) {
     alert('swiped right!')}
+    else if (touchendY < touchstartY){
+    alert('swiped down')}
+    else if (touchendY < touchstartY){
+    alert('swiped up')}
+
 }
 
 document.addEventListener('touchstart', e => {
   touchstartX = e.changedTouches[0].screenX
-})
+  touchstartY = e.changedTouches[0].screenY
 
+})
 document.addEventListener('touchend', e => {
   touchendX = e.changedTouches[0].screenX
+  touchendY = e.changedTouches[0].screenY
+
   checkDirection()
 })
+gameTable.setAttribute('onclick','run()')
 gameTable.style.border = '3px red solid'
 gameTable.style.marginLeft = 'auto'
 gameTable.style.marginRight = 'auto'
@@ -60,15 +82,10 @@ gameTable.style.backgroundColor = 'white'
 title.innerHTML = "Snake Game"
 title.style.textAlign = 'center'
 title.style.color = 'green'
-playButton.style.marginLeft = 'auto'
-playButton.style.margin.Right = 'auto'
-playButton.innerHTML = 'Play'
-playButton.style.width = '20%'
 headerDiv.appendChild(title)
-buttonDiv.appendChild(playButton)
 document.body.appendChild(headerDiv)
 document.body.appendChild(gameTable)
-document.body.appendChild(buttonDiv)
+
 function finish() {
     appleCell.style.backgroundImage = ""   
     alert(`Score: ${(snake.length)-5}`)
@@ -188,7 +205,7 @@ function moveSnake() {
     
     // Yılanın başını ve vücudunu güncelleme
     snake.unshift(newHead);
-    for (let f = 0; f < snake.length; f++) {
+    for (let f = 1; f < snake.length; f++) {
         if (newHead == snake[f]) {
             finish()
             document.getElementById(newHead).innerHTML = ''
