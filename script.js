@@ -14,6 +14,7 @@ let touchendX = 0
 let touchstartY = 0
 let touchendY = 0
 let engine = false
+let speed = 400
 
 let direction = 2
 // direction: 1 -- Up,
@@ -113,7 +114,7 @@ document.body.appendChild(gameTable)
 function finish() {
     clearInterval(move)
     appleCell.style.backgroundImage = ""   
-    alert(`Score: ${(snake.length)-5}`)
+    alert(`Score: ${score}`)
     engine = false
     
 }
@@ -140,16 +141,16 @@ function run() {
     createApple()
     move = setInterval(function() {
         moveSnake();
-    }, 400); // Yılanı her 400ms'de bir hareket ettir
+    }, speed); // Yılanı her 400ms'de bir hareket ettir
     document.addEventListener('keydown', function(event) {
     
-        if (direction != 3 && lastdirection != 3 && (event.key === 'w' || event.key === 'W' || event.key === 'ArrowUp')) {
+        if (direction !== 3 && lastdirection !== 3 && (event.key === 'w' || event.key === 'W' || event.key === 'ArrowUp')) {
             direction = 1; // Yukarı
-        } else if (direction != 4 && lastdirection != 4 && event.key === 'd'||event.key === 'S'||event.key === 'ArrowRight') {
+        } else if (direction !== 4 && lastdirection !== 4 && (event.key === 'd'||event.key === 'S'||event.key === 'ArrowRight')) {
             direction = 2; // Sağ (2)
-        } else if (direction != 1 && lastdirection != 1 && event.key === 's'||event.key === 'S'||event.key === 'ArrowDown') {
+        } else if (direction !== 1 && lastdirection !== 1 && (event.key === 's'||event.key === 'S'||event.key === 'ArrowDown')) {
             direction = 3; // Aşağı (3)
-        } else if (direction != 2 && lastdirection != 2 && event.key === 'a'||event.key === 'A'||event.key === 'ArrowLeft') {
+        } else if (direction !== 2 && lastdirection !== 2 && (event.key === 'a'||event.key === 'A'||event.key === 'ArrowLeft')) {
             direction = 4; // Sol (4)
         }
     });
@@ -205,8 +206,8 @@ function moveSnake() {
     let snakeHead = document.createElement('img')
     snakeHead.src = 'assets/snakehead.png'
     snakeHead.style.display = 'block'
-    snakeHead.style.height = '100%'
-    snakeHead.style.width = '100%'
+    snakeHead.style.height = '90%'
+    snakeHead.style.width = '90%'
     snakeHead.style.transform = `rotate(${rotation}deg)`
     document.getElementById(newHead).appendChild(snakeHead)
     document.getElementById(snake[0]).style.backgroundColor = 'green'
@@ -230,6 +231,14 @@ function moveSnake() {
         score += 1;
         createApple()
         snake.push[undefined]
+        if (score%10==0) {
+            speed -= 15
+            clearInterval(move)
+            move = setInterval(function() {
+                moveSnake();
+            }, speed);
+            
+        }
         return
     }
     snake.pop();
