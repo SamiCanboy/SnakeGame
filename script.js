@@ -13,14 +13,14 @@ let touchstartX = 0
 let touchendX = 0
 let touchstartY = 0
 let touchendY = 0
+let engine = false
 
-
-let direction = 2;
+let direction = 2
 // direction: 1 -- Up,
 //            2 -- Right
 //            3 -- Down
 //            4 -- Left
-let snake;
+let snake
 
 for (let i = 0; i < 15; i++) {
     let row = document.createElement('tr')
@@ -47,13 +47,16 @@ function adjustCellHeights(newHeight) {
         cell.style.height = `${newHeight}px`;
     }
 }
-
-// Örnek kullanım: tüm hücreleri 40px yap
-adjustCellHeights(40);
-if (window.innerWidth<800) {
-    adjustCellHeights(25);
+function checkDeviceWidth() {
+    let width = window.innerWidth
+    if (width <= 480) {
+        adjustCellHeights(22)
+        return
+    } else if (width> 480 && width <= 800) {
+        adjustCellHeights(25);
+    } 
 }
-
+checkDeviceWidth()
 function checkDirection() {
     const deltaX = touchendX - touchstartX; // Yatay hareket farkı
     const deltaY = touchendY - touchstartY; // Dikey hareket farkı
@@ -88,7 +91,14 @@ document.addEventListener('touchend', e => {
 
   checkDirection()
 })
-gameTable.setAttribute('onclick','run()')
+gameTable.setAttribute('onclick','tableClick()')
+function tableClick() {
+    if (engine == false) {
+        run()
+        engine = true
+    }else{
+    }
+}
 gameTable.style.border = '3px red solid'
 gameTable.style.marginLeft = 'auto'
 gameTable.style.marginRight = 'auto'
@@ -101,14 +111,11 @@ document.body.appendChild(headerDiv)
 document.body.appendChild(gameTable)
 
 function finish() {
+    clearInterval(move)
     appleCell.style.backgroundImage = ""   
     alert(`Score: ${(snake.length)-5}`)
-    clearInterval(move)
-    for (let i = 1; i <= 225; i++) {
-        document.getElementById(i.toString()).style.backgroundColor = 'white'
-    }
-    document.getElementById(newHead).removeChild(snakeHead)
-    playButton.style.visibility = 'visible'
+    engine = false
+    
 }
 function createApple() {
     do {
@@ -121,6 +128,11 @@ function createApple() {
     appleCell.style.backgroundRepeat = 'no-repeat'
 }
 function run() {
+    for (let i = 1; i <= 225; i++) {
+        document.getElementById(i.toString()).style.backgroundColor = 'white'
+        document.getElementById(i.toString()).style.innerHTML = ''
+    }
+    direction = 2
     rotation = -90
     score = 0
     snake = [112,111,110,109];
@@ -186,7 +198,8 @@ function moveSnake() {
         rotation = -90
         lastdirection = 4
     }
-    title.innerHTML = `Score: ${score}||${newHead}||${snake}`
+    title.innerHTML = `Score: ${score}`
+    console.log(newHead,'---',snake)
 
     // Yılanın başını yeşile boyama
     let snakeHead = document.createElement('img')
@@ -196,17 +209,11 @@ function moveSnake() {
     snakeHead.style.width = '100%'
     snakeHead.style.transform = `rotate(${rotation}deg)`
     document.getElementById(newHead).appendChild(snakeHead)
-    // document.getElementById(newHead).backgroundImage = `rotate(${rotation})`
-    // document.getElementById(newHead).style.backgroundImage = "url('assets/snakehead.png')";
-    // document.getElementById(newHead).style.backgroundSize = 'cover'
-    // document.getElementById(newHead).style.backgroundPosition = 'center'
-    // document.getElementById(newHead).style.backgroundRepeat = 'no-repeat'
-    document.getElementById(snake[0]).style.backgroundColor = 'green';
-
+    document.getElementById(snake[0]).style.backgroundColor = 'green'
     document.getElementById(snake[0]).innerHTML = ''
-
+    
     // Yılanın vücudunu beyaza döndürme (önceki pozisyon)
-    document.getElementById(snake[snake.length - 1]).style.backgroundColor = 'white';
+    document.getElementById(snake[snake.length - 1]).style.backgroundColor = 'white'
     
     // Yılanın başını ve vücudunu güncelleme
     snake.unshift(newHead);
@@ -214,9 +221,8 @@ function moveSnake() {
         if (newHead == snake[f]) {
             finish()
             document.getElementById(newHead).innerHTML = ''
-            clearInterval(move)
+            document.getElementById(newHead).style.backgroundColor = 'red'
             return
-        
         }
     }
     if (newHead === apple) {
@@ -235,4 +241,5 @@ function win() {
     for (let i = 1; i <= 225; i++) {
         document.getElementById(i.toString()).style.backgroundColor = 'white'
     }
+    engine = false
 }
