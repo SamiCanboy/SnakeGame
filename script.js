@@ -1,8 +1,11 @@
 document.body.style.backgroundColor = 'black'
 document.body.style.overflow = 'hidden'
+
 let headerDiv = document.createElement('div')
 let title = document.createElement('h1')
 let gameTable = document.createElement('table')
+let description = document.createElement('p')
+let snake
 let score
 let apple
 let move
@@ -15,13 +18,27 @@ let touchstartY = 0
 let touchendY = 0
 let engine = false
 let speed = 400
-
 let direction = 2
 // direction: 1 -- Up,
 //            2 -- Right
 //            3 -- Down
 //            4 -- Left
-let snake
+
+gameTable.style.border = '2px green solid'
+gameTable.style.marginLeft = 'auto'
+gameTable.style.marginRight = 'auto'
+gameTable.style.backgroundColor = 'white'
+
+title.innerHTML = "Snake Game"
+title.style.textAlign = 'center'
+title.style.color = 'green'
+description.innerText = 'For play touch the screen and swipe or use WASD to change direction'
+description.style.color = 'red'
+description.style.textAlign = 'center'
+headerDiv.appendChild(title)
+document.body.appendChild(headerDiv)
+document.body.appendChild(gameTable)
+document.body.appendChild(description)
 
 for (let i = 0; i < 15; i++) {
     let row = document.createElement('tr')
@@ -31,20 +48,17 @@ for (let i = 0; i < 15; i++) {
         cell.style.backgroundColor = 'white'
         
         cell.id = cellid
-        cell.style.width = '50px'
-        cell.style.height = '50px'
+        cell.style.width = '40px'
+        cell.style.height = '40px'
         cell.style.borderRadius = '40%'
-        row.appendChild(cell);
+        row.appendChild(cell)
     }
-    gameTable.appendChild(row);
+    gameTable.appendChild(row)
 }
 function adjustCellHeights(newHeight) {
-    // gameTable içindeki tüm hücreleri seç
-    const cells = gameTable.getElementsByTagName('th');
-
-    // Her hücrenin yüksekliğini güncelle
+    const cells = gameTable.getElementsByTagName('th')
     for (let cell of cells) {
-        cell.style.height = `${newHeight}px`;
+        cell.style.height = `${newHeight}px`
     }
 }
 function checkDeviceWidth() {
@@ -53,7 +67,7 @@ function checkDeviceWidth() {
         adjustCellHeights(22)
         return
     } else if (width> 480 && width <= 800) {
-        adjustCellHeights(25);
+        adjustCellHeights(25)
     } 
 }
 checkDeviceWidth()
@@ -65,16 +79,16 @@ function checkDirection() {
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
         // Yatay hareket
         if (deltaX > 0 && lastdirection !== 4) {
-            direction = 2; // Sağ
+            direction = 2 // Sağ
         } else if (deltaX < 0 && lastdirection !== 2) {
-            direction = 4; // Sol
+            direction = 4 // Sol
         }
     } else {
         // Dikey hareket
         if (deltaY > 0 && lastdirection !== 1) {
-            direction = 3; // Aşağı
+            direction = 3 // Aşağı
         } else if (deltaY < 0 && lastdirection !== 3) {
-            direction = 1; // Yukarı
+            direction = 1 // Yukarı
         }
     }
 }
@@ -99,17 +113,6 @@ function tableClick() {
     }else{
     }
 }
-gameTable.style.border = '3px red solid'
-gameTable.style.marginLeft = 'auto'
-gameTable.style.marginRight = 'auto'
-gameTable.style.backgroundColor = 'white'
-title.innerHTML = "Snake Game"
-title.style.textAlign = 'center'
-title.style.color = 'green'
-headerDiv.appendChild(title)
-document.body.appendChild(headerDiv)
-document.body.appendChild(gameTable)
-
 function finish() {
     clearInterval(move)
     appleCell.style.backgroundImage = ""   
@@ -135,7 +138,7 @@ function run() {
     direction = 2
     rotation = -90
     score = 0
-    snake = [112,111,110,109];
+    snake = [112,111,110,109]
     
     createApple()
     move = setInterval(function() {
@@ -144,13 +147,13 @@ function run() {
     document.addEventListener('keydown', function(event) {
     
         if (direction !== 3 && lastdirection !== 3 && (event.key === 'w' || event.key === 'W' || event.key === 'ArrowUp')) {
-            direction = 1; // Yukarı
+            direction = 1 // Yukarı
         } else if (direction !== 4 && lastdirection !== 4 && (event.key === 'd'||event.key === 'S'||event.key === 'ArrowRight')) {
-            direction = 2; // Sağ (2)
+            direction = 2 // Sağ (2)
         } else if (direction !== 1 && lastdirection !== 1 && (event.key === 's'||event.key === 'S'||event.key === 'ArrowDown')) {
-            direction = 3; // Aşağı (3)
+            direction = 3 // Aşağı (3)
         } else if (direction !== 2 && lastdirection !== 2 && (event.key === 'a'||event.key === 'A'||event.key === 'ArrowLeft')) {
-            direction = 4; // Sol (4)
+            direction = 4 // Sol (4)
         }
     });
 }
@@ -159,8 +162,8 @@ function moveSnake() {
     if (snake.length == 225) {
         win()
     }
-    let head = snake[0]; // Yılanın başı
-    let newHead;
+    let head = snake[0] // Yılanın başı
+    let newHead
     if (direction === 1) {
         if (head<16) {
             newHead = head + 210
@@ -175,7 +178,7 @@ function moveSnake() {
             newHead = head - 14
         }
         else{
-            newHead = head + 1; // Sağ git
+            newHead = head + 1; // Sağa git
         }
         rotation = 90
         lastdirection = 2
@@ -193,7 +196,7 @@ function moveSnake() {
             newHead = head + 14
         }
         else{
-            newHead = head - 1; // Sol git
+            newHead = head - 1 // Sola git
         }
         rotation = -90
         lastdirection = 4
